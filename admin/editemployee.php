@@ -6,7 +6,13 @@ if(strlen($_SESSION['alogin'])==0)
     {   
 header('location:index.php');
 }
+
 else{
+    if(isset($_POST['retour']))
+{ 
+    header('location:manageemployee.php');
+
+}
 if(isset($_POST['add']))
 { 
     // pda
