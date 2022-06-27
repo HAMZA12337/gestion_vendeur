@@ -11,13 +11,13 @@ if(isset($_GET['del']))
 {
     $date = date('Y-m-d');
 $id=$_GET['del'];
-
-$sql = "update vendeur set STATUS=1 , date_sortie=:date  WHERE pda=:id";
+echo $date;
+$sql = "update vendeur set STATUS=0 , date_sortie=:date  WHERE pda=:id";
 $query = $dbh->prepare($sql);
 $query -> bindParam(':id',$id, PDO::PARAM_STR);
 $query -> bindParam(':date',$date, PDO::PARAM_STR);
 $query -> execute();
-$msg="vendeur record deleted";
+$msg="vendeur record become actif";
 
 }
 
@@ -84,9 +84,9 @@ position: left;
                     <div class="col s12 m12 l12">
                         <div class="card">
                             <div class="card-content">
-                                <span class="card-title">Information des Vendeurs</span>
+                                <marquee><span class="card-title">Vendeurs Hors Service</span></marquee>
                                 <?php if($msg){?><div class="succWrap"><strong>SUCCESS</strong> : <?php echo htmlentities($msg); ?> </div><?php }?>
-                                <a href="addemployee.php"><button type="button" class="btn btn-info" id="buttA" >+ Ajouter</button></a> 
+                                
                                 <table id="example" class="display responsive-table " border="2" >
                                     <thead>
                                         <tr>
@@ -97,6 +97,7 @@ position: left;
                                             <th>N° CNSS</th>
                                             <th>Date de Naissance</th>
                                             <th>Date Entrée</th>
+                                            <th>Date Sortie</th>
                                             <th>Code Assabil</th>
                                             <th>Code Sage</th>
                                              <th>Action</th>
@@ -107,7 +108,7 @@ position: left;
 <?php
 
 
-$sql = "SELECT v.nomp,v.prenom,v.cin,v.cnss,v.date_naissance,v.date_entree,v.code_sage,s.nom_secteur,v.pda,r.nom from vendeur v join secteur s on v.pda=s.pda join region r on s.id_region=r.id where v.STATUS=0";
+$sql = "SELECT v.nomp,v.prenom,v.cin,v.cnss,v.date_naissance,v.date_entree,v.date_sortie,v.code_sage,s.nom_secteur,v.pda,r.nom from vendeur v join secteur s on v.pda=s.pda join region r on s.id_region=r.id where v.STATUS=1";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -125,9 +126,10 @@ foreach($results as $result)
                                             <td><?php echo htmlentities($result->cnss);?></td>
                                             <td><?php echo htmlentities($result->date_naissance);?></td>
                                             <td><?php echo htmlentities($result->date_entree);?></td>
+                                            <td><?php echo htmlentities($result->date_sortie);?></td>
                                             <td><?php echo htmlentities($result->pda);?></td>
                                             <td><?php echo htmlentities($result->code_sage);?></td>
-                                            <td><a href="editemployee.php?deptid=<?php echo htmlentities($result->pda);?>"><i class="material-icons">mode_edit</i></a><a href="manageemployee.php?del=<?php echo htmlentities($result->pda);?>" onclick="return test() ;"> <i class="material-icons">delete_forever</i></a></td>
+                                            <td><center><a href="manageemployee%20_h.php?del=<?php echo htmlentities($result->pda);?>" onclick="return test() ;"> <i class="material-icons">delete_forever</i></a></center></td>
                                         </tr>
                                          <?php $cnt++;} }?>
                                     </tbody>

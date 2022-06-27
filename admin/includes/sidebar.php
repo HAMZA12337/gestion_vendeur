@@ -79,8 +79,8 @@ foreach($results as $result)
                         <a class="collapsible-header waves-effect waves-grey"><i class="material-icons">card_travel</i>Vendeur<i class="nav-drop-icon material-icons">keyboard_arrow_right</i></a>
                         <div class="collapsible-body">
                             <ul>
-                                <li><a href="manageemployee.php"> Vendeur actif</a></li>
-                                <li><a href="pending-leavehistory.php">Vendeur Hors service </a></li>
+                                <li><a href="manageemployee.php"> Vendeur Actif</a></li>
+                                <li><a href="manageemployee _h.php">Vendeur Hors service </a></li>
                                
        
                             </ul>
