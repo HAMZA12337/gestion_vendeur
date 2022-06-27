@@ -21,6 +21,10 @@ $msg="vendeur record become actif";
 
 }
 
+if(isset($_GET['re'])){
+    echo 'hello' ;
+}
+
     ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -129,7 +133,7 @@ foreach($results as $result)
                                             <td><?php echo htmlentities($result->date_sortie);?></td>
                                             <td><?php echo htmlentities($result->pda);?></td>
                                             <td><?php echo htmlentities($result->code_sage);?></td>
-                                            <td><center><a href="manageemployee%20_h.php?del=<?php echo htmlentities($result->pda);?>" onclick="return test() ;"> <i class="material-icons">delete_forever</i></a></center></td>
+                                            <td><a href="manageemployee%20_h.php?del=<?php echo htmlentities($result->pda);?>" onclick="return test() ;"> <i class="material-icons">delete_forever</i></a><a href="manageemployee%20_h.php?re=<?php echo htmlentities($result->pda);?>" onclick="return test() ;"> <i class="material-icons">loop</i></a></td>
                                         </tr>
                                          <?php $cnt++;} }?>
                                     </tbody>

@@ -164,7 +164,7 @@ error:function (){}
 <div class="input-field col m6 s12">
 <select  name="IdCom" autocomplete="on" size="2">
 <option value="" disabled selected>Select PDA</option>
-<?php $sql = "SELECT pda from secteur where pda not in(select pda from vendeur) ";
+<?php $sql = "SELECT pda from secteur where pda not in(select pda from vendeur where STATUS=0) ";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
