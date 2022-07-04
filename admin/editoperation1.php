@@ -10,7 +10,7 @@ header('location:index.php');
 else{
     if(isset($_POST['retour']))
 { 
-    header('location:manageemployee.php');
+    header('location:manageoperation1.php');
 
 }
 if(isset($_POST['add']))
@@ -24,28 +24,27 @@ $fname=$_POST['firstName'];
 $lname=$_POST['lastName'];   
 $cin=$_POST['cin']; 
 $cnss=$_POST['cnss']; 
-$dob_1=$_POST['dob_1']; 
-$dob_2=$_POST['dob_2']; 
+ 
+$ecart=$empid+$fname-$lname;
 
-
-$sql=" update vendeur set nomp=:fname, prenom=:lname,cin=:cin,cnss=:cnss, date_naissance=:dob_1 , date_entree=:dob_2 
-, code_sage=:empid where pda=:did ";
+$sql=" update operation1 set pda=:IdCom, solde_ant=:empid, chiffre=:fname,encaissement=:lname,solde_clie=:cin,ecart=:ecart, stc=:cnss where  id=:did ";
 
 
 
 $query = $dbh->prepare($sql);
-// $query->bindParam(':IdCom',$IdCom,PDO::PARAM_STR);
+$query->bindParam(':IdCom',$IdCom,PDO::PARAM_STR);
 $query->bindParam(':fname',$fname,PDO::PARAM_STR);
 $query->bindParam(':lname',$lname,PDO::PARAM_STR);
 $query->bindParam(':cin',$cin,PDO::PARAM_STR);
 $query->bindParam(':cnss',$cnss,PDO::PARAM_STR);
-$query->bindParam(':dob_1',$dob_1,PDO::PARAM_STR);
-$query->bindParam(':dob_2',$dob_2,PDO::PARAM_STR);
 $query->bindParam(':empid',$empid,PDO::PARAM_STR);
+$query->bindParam(':ecart',$ecart,PDO::PARAM_STR);
 $query->bindParam(':did',$did,PDO::PARAM_STR);
 $query->execute();
 
- header('location:manageemployee.php');
+ header('location:manageoperation1.php');
+
+// // }
 
 }
 
@@ -89,37 +88,7 @@ $query->execute();
 }
         </style>
 
-<script>
-function checkAvailabilityEmpid() {
-$("#loaderIcon").show();
-jQuery.ajax({
-url: "check_availability.php",
-data:'empcode='+$("#empcode").val(),
-type: "POST",
-success:function(data){
-$("#empid-availability").html(data);
-$("#loaderIcon").hide();
-},
-error:function (){}
-});
-}
-</script>
 
-<script>
-function checkAvailabilityEmailid() {
-$("#loaderIcon").show();
-jQuery.ajax({
-url: "check_availability.php",
-data:'emailid='+$("#email").val(),
-type: "POST",
-success:function(data){
-$("#emailid-availability").html(data);
-$("#loaderIcon").hide();
-},
-error:function (){}
-});
-}
-</script>
 
 
 
@@ -149,7 +118,7 @@ error:function (){}
 <p style="color:#008B8B;">PDA</p>
 <select  name="IdCom" autocomplete="on" size="2" required>
 <option value="" disabled selected>Select PDA</option>
-<?php $sql = "SELECT pda from secteur where pda not in(select pda from vendeur where STATUS=0 and pda != :did ) ";
+<?php $sql = "SELECT pda from secteur  ";
 $query = $dbh -> prepare($sql);
 $query->bindParam(':did',$did,PDO::PARAM_STR);
 $query->execute();
@@ -167,7 +136,7 @@ foreach($results as $result)
 
 <?php 
 $did=$_GET['deptid'];
-$sql = "SELECT * from vendeur WHERE pda=:did";
+$sql = "SELECT * from operation1 WHERE id=:did";
 $query = $dbh -> prepare($sql);
 $query->bindParam(':did',$did,PDO::PARAM_STR);
 $query->execute();
@@ -182,43 +151,34 @@ foreach($results as $result)
 
 <div class="input-field col m6 s12">
 
-<p style="color:#008B8B;">Code Sage</p>
-<input  name="empcode" id="empcode" onBlur="checkAvailabilityEmpid()" value="<?php echo htmlentities($result->code_sage);?>" type="text" autocomplete="off" required>
+<p style="color:#008B8B;">Solde Antérieur</p>
+<input  name="empcode" id="empcode"  value="<?php echo htmlentities($result->solde_ant);?>" type="number" autocomplete="off" required>
 <span id="empid-availability" style="font-size:12px;"></span> 
 </div>
    
 
 
 <div class="input-field col m6 s12">
-<p style="color:#008B8B;">Prénom</p>
-<input id="firstName" name="firstName" value="<?php echo htmlentities($result->nomp);?>"  type="text" required>
+<p style="color:#008B8B;">Chiffre D'affaire</p>
+<input id="firstName" name="firstName" value="<?php echo htmlentities($result->chiffre);?>"  type="text" required>
 </div>
 
 <div class="input-field col m6 s12">
-<p style="color:#008B8B;">NOM</p>
-<input id="lastName" name="lastName" type="text"  value="<?php echo htmlentities($result->prenom);?>" autocomplete="off" required>
+<p style="color:#008B8B;">Encaissement</p>
+<input id="lastName" name="lastName" type="number"  value="<?php echo htmlentities($result->encaissement);?>" autocomplete="off" required>
 </div>
 
 <div class="input-field col m6 s12">
-<p style="color:#008B8B;">CIN</p>
-<input id="cin" name="cin" type="text" value="<?php echo htmlentities($result->cin);?>" required>
+<p style="color:#008B8B;">Solde Client </p>
+<input id="cin" name="cin" type="number" value="<?php echo htmlentities($result->solde_clie);?>" required>
 </div>
 
 <div class="input-field col m6 s12">
-<p style="color:#008B8B;">CNSS</p>
-<input id="cnss" name="cnss" type="text" value="<?php echo htmlentities($result->cnss);?>"  autocomplete="off" required>
+<p style="color:#008B8B;">Stc</p>
+<input id="cnss" name="cnss" type="number" value="<?php echo htmlentities($result->stc);?>"  autocomplete="off" required>
 </div>
 
 
-<div class="input-field col m6 s12">
-<pre><p >Date de Naissance</p></pre>
-<input type="date" id="birthdate" name="dob_1" type="date" value="<?php echo htmlentities($result->date_naissance);?>"  autocomplete="off" >
-</div>
-
-<div class="input-field col m6 s12">
-<pre><p >Date d'entrée Etablissement </p></pre>
-<input type="date" id="birthdate" name="dob_2" type="date" value="<?php echo htmlentities($result->date_entree);?>"  autocomplete="off" >
-</div>
 
                                                     
 <?php }} ?>

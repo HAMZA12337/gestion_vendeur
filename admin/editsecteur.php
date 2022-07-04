@@ -25,6 +25,7 @@ $query->bindParam(':did',$did,PDO::PARAM_STR);
 $query->execute();
 $msg="Département mis à jour avec succès";
 header('location:managesecteur.php');
+echo $choix ;
 }
 
     ?>
@@ -105,9 +106,10 @@ foreach($results as $result)
 
                                         <div class="row">
                                         <div class="input-field col s12">
+                                        <p style=" color:#008B8B;">Région</p>                     
 <select  name="choix" autocomplete="off"  size="3">
-<option value="" disabled selected>Region</option>
 <?php $sql = "SELECT id,nom from region  ";
+
 $query->bindParam(' :result->id_region',$result->id_region,PDO::PARAM_STR);
 $query = $dbh -> prepare($sql);
 $query->execute();
@@ -116,7 +118,8 @@ $cnt=1;
 if($query->rowCount() > 0)
 {
 foreach($results as $resultss)
-{   ?>                                            
+{   ?>              
+<option></option>                              
 <option value="<?php echo htmlentities($resultss->id);?>"><?php echo htmlentities($resultss->nom)?></option>
 <?php }} ?>
 </select>

@@ -87,6 +87,18 @@ foreach($results as $result)
                         </div>
                     </li>
 
+                    
+                    <li class="no-padding">
+                        <a class="collapsible-header waves-effect waves-grey"><i class="material-icons">monetization_on</i>Opération<i class="nav-drop-icon material-icons">keyboard_arrow_right</i></a>
+                        <div class="collapsible-body">
+                            <ul>
+                                <li><a href="manageoperation1.php"> Arrête de la Situation</a></li>
+                                <li><a href="manageemployee _h.php">Historique des Opérations</a></li>
+                               
+       
+                            </ul>
+                        </div>
+                    </li>
 
 
 

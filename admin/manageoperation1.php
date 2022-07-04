@@ -9,27 +9,15 @@ header('location:index.php');
 else{  
 if(isset($_GET['del']))
 {
-    $id=$_GET['del'];
-    $sql = "delete from  vendeur  WHERE pda=:id";
-    $query = $dbh->prepare($sql);
-    $query -> bindParam(':id',$id, PDO::PARAM_STR);
-    
-    $query -> execute();
-    $msg="vendeur record deleted";
-
-}
-
-if(isset($_GET['re']))
-{
-
     $date = date('Y-m-d');
-$id=$_GET['re'];
-$sql = "update vendeur set STATUS=0 , date_sortie=:date  WHERE pda=:id";
+$id=$_GET['del'];
+
+$sql = "update operation1 set status=1 , realise_le=:date  WHERE id=:id";
 $query = $dbh->prepare($sql);
 $query -> bindParam(':id',$id, PDO::PARAM_STR);
 $query -> bindParam(':date',$date, PDO::PARAM_STR);
 $query -> execute();
-$msg="vendeur record become actif";
+$msg="vendeur record deleted";
 
 }
 
@@ -96,22 +84,23 @@ position: left;
                     <div class="col s12 m12 l12">
                         <div class="card">
                             <div class="card-content">
-                                <marquee><span class="card-title">Vendeurs Hors Service</span></marquee>
+                             <marquee>   <span class="card-title">Arrête de la Situation Récapitulatif Provisoire</span></marquee>
                                 <?php if($msg){?><div class="succWrap"><strong>SUCCESS</strong> : <?php echo htmlentities($msg); ?> </div><?php }?>
-                                
+                                <a href="addoperation1.php"><button type="button" class="btn btn-info" id="buttA" >+ Ajouter</button></a> 
                                 <table id="example" class="display responsive-table " border="2" >
                                     <thead>
                                         <tr>
                                             <th>Numéro</th>
-                                            <th>Région</th>
-                                            <th>Salarié</th>
-                                            <th>N° CIN</th>
-                                            <th>N° CNSS</th>
-                                            <th>Date de Naissance</th>
-                                            <th>Date Entrée</th>
-                                            <th>Date Sortie</th>
                                             <th>Code Assabil</th>
-                                            <th>Code Sage</th>
+                                            <th>Région</th>
+                                            <th>Secteur</th>
+                                            <th>Solde Antérieur</th>
+                                            <th>Chiffre d'Affaire</th>
+                                            <th>Encaissement</th>
+                                            <th>Solde Client</th>
+                                             <th >Ecart</th>
+                                            <th>Stc</th>
+                                            
                                              <th>Action</th>
                                         </tr>
                                     </thead>
@@ -120,29 +109,35 @@ position: left;
 <?php
 
 
-$sql = "SELECT v.nomp,v.prenom,v.cin,v.cnss,v.date_naissance,v.date_entree,v.date_sortie,v.code_sage,s.nom_secteur,v.pda,r.nom from vendeur v join secteur s on v.pda=s.pda join region r on s.id_region=r.id where v.STATUS=1";
+$sql = "SELECT v.id,v.pda,v.solde_ant,v.chiffre,v.encaissement,v.solde_clie,v.stc,a.nom,r.nom_secteur from operation1 v join vendeur s on v.pda=s.pda join secteur r on s.pda=r.pda join region a on r.id_region=a.id where v.status =0";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
+
 if($query->rowCount() > 0)
 {
 foreach($results as $result)
-{               ?>  
+{            
+    $ecart=$result->solde_ant+$result->chiffre-$result->encaissement;
+    $state;
+
+echo $state;
+    ?>  
                                         <tr>
                                             <td> <?php echo htmlentities($cnt);?></td>
-                                            <td><?php echo htmlentities($result->nom);?></td>
-                                            <td><?php echo htmlentities($result->nomp).' '.htmlentities($result->prenom);?></td>
-                                            
-                                            <td><?php echo htmlentities($result->cin);?></td>
-                                            <td><?php echo htmlentities($result->cnss);?></td>
-                                            <td><?php echo htmlentities($result->date_naissance);?></td>
-                                            <td><?php echo htmlentities($result->date_entree);?></td>
-                                            <td><?php echo htmlentities($result->date_sortie);?></td>
                                             <td><?php echo htmlentities($result->pda);?></td>
-                                            <td><?php echo htmlentities($result->code_sage);?></td>
-                                            <td><a href="manageemployee%20_h.php?del=<?php echo htmlentities($result->pda);?>"> <i class="material-icons">delete_forever</i></a>
-                                             <a href="manageemployee%20_h.php?re=<?php echo htmlentities($result->pda);?>"> <i class="material-icons">loop</i></a></td>
+                                            <td><?php echo htmlentities($result->nom);?></t d>
+                                            
+                                            <td><?php echo htmlentities($result->nom_secteur);?></td>
+                                            <td><?php echo htmlentities($result->solde_ant);?></td>
+                                            <td><?php echo htmlentities($result->chiffre);?></td>
+                                            <td><?php echo htmlentities($result->encaissement);?></td>
+                                            <td><?php echo htmlentities($result->solde_clie);?></td>
+                                            <td><?php echo htmlentities($ecart);?></td>
+                                           
+                                            <td><?php echo htmlentities($result->stc);?></td>
+                                            <td><a href="printoperation1.php?del=<?php echo htmlentities($result->id);?>"><i class="material-icons">print</i></a><a href="editoperation1.php?deptid=<?php echo htmlentities($result->id);?>"><i class="material-icons">mode_edit</i></a><a href="manageoperation1.php?del=<?php echo htmlentities($result->id);?>" > <i class="material-icons">delete_forever</i></a></td>
                                         </tr>
                                          <?php $cnt++;} }?>
                                     </tbody>
