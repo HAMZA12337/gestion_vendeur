@@ -12,15 +12,25 @@ if(isset($_GET['del']))
     $date = date('Y-m-d');
 $id=$_GET['del'];
 
-$sql = "update operation1 set status=1 , realise_le=:date  WHERE id=:id";
+$sql = "DELETE FROM operation1 WHERE id=:id";
 $query = $dbh->prepare($sql);
 $query -> bindParam(':id',$id, PDO::PARAM_STR);
-$query -> bindParam(':date',$date, PDO::PARAM_STR);
 $query -> execute();
 $msg="operation record deleted";
 
 }
+if(isset($_GET['del1']))
+{
+    $id=$_GET['del1'];
 
+    $sql = "update operation1 set  status=0 WHERE id=:id";
+$query = $dbh->prepare($sql);
+$query -> bindParam(':id',$id, PDO::PARAM_STR);
+$query -> execute();
+$msg="operation record updated";
+
+
+}
     ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -84,7 +94,7 @@ position: left;
                     <div class="col s12 m12 l12">
                         <div class="card">
                             <div class="card-content">
-                             <marquee>   <span class="card-title">Arrête de la Situation Récapitulatif Provisoire</span></marquee>
+                             <marquee>   <span class="card-title">Historique-Arrête de la Situation Récapitulatif Provisoire</span></marquee>
                                 <?php if($msg){?><div class="succWrap"><strong>SUCCESS</strong> : <?php echo htmlentities($msg); ?> </div><?php }?>
                                 <a href="addoperation1.php"><button type="button" class="btn btn-info" id="buttA" >+ Ajouter</button></a> 
                                 <table id="example" class="display responsive-table " border="2" >
@@ -109,7 +119,7 @@ position: left;
 <?php
 
 
-$sql = "SELECT v.id,v.pda,v.solde_ant,v.chiffre,v.encaissement,v.solde_clie,v.stc,a.nom,r.nom_secteur from operation1 v join vendeur s on v.pda=s.pda join secteur r on s.pda=r.pda join region a on r.id_region=a.id where v.status =0";
+$sql = "SELECT v.id,v.pda,v.solde_ant,v.chiffre,v.encaissement,v.solde_clie,v.stc,a.nom,r.nom_secteur from operation1 v join vendeur s on v.pda=s.pda join secteur r on s.pda=r.pda join region a on r.id_region=a.id where v.status =1";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -137,7 +147,7 @@ echo $state;
                                             <td><?php echo htmlentities($ecart);?></td>
                                            
                                             <td><?php echo htmlentities($result->stc);?></td>
-                                            <td><a href="printoperation1.php?del=<?php echo htmlentities($result->id);?>"><i class="material-icons">print</i></a><a href="editoperation1.php?deptid=<?php echo htmlentities($result->id);?>"><i class="material-icons">mode_edit</i></a><a href="manageoperation1.php?del=<?php echo htmlentities($result->id);?>" > <i class="material-icons">delete_forever</i></a></td>
+                                            <td><a href="printoperation1.php?del=<?php echo htmlentities($result->id);?>"><i class="material-icons">print</i></a><a href="histoperation1.php?del1=<?php echo htmlentities($result->id);?>" > <i class="material-icons">loop</i></a><a href="histoperation1.php?del=<?php echo htmlentities($result->id);?>" > <i class="material-icons">delete_forever</i></a></td>
                                         </tr>
                                          <?php $cnt++;} }?>
                                     </tbody>

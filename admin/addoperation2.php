@@ -10,25 +10,52 @@ else{
 if(isset($_POST['add']))
 {
     // pda
-$IdCom=$_POST['IdCom']; 
+$pda=$_POST['pda']; 
 // code sage
-$empid=$_POST['empcode'];
-$fname=$_POST['firstName'];
-$lname=$_POST['lastName'];   
-$cin=$_POST['cin']; 
-$cnss=$_POST['cnss']; 
- 
+$nb_jour=$_POST['nb_jour'];
+$versement=$_POST['versement'];
+$crax=$_POST['crax']; 
+$maintenance=$_POST['maintenance']; 
+$date_=$_POST['date'];
+$garde=$_POST['garde'];
+$comission=0;
+$prime=0;
+$net_pay=0; 
+if($versement>=49000 && $versement<69000 ){
+    $comission=0.01*$versement;
+}
+if($versement>=69000 && $versement<80000 ){
+    $comission=0.02*$versement;
+}
+if($versement>=80000 && $versement<100000 ){
+    $prime=0.02*$versement+1000;
+}
+if($versement>=100000 ){
+    $prime=0.02*$versement+2000;
+}
+
+$net_pay=((2638*$nb_jour)/26)+$comission+$maintenance+$prime+110;
 
 
-$sql="INSERT INTO operation1(pda,solde_ant,chiffre,encaissement,solde_clie,stc) 
-VALUES(:IdCom,:empid,:fname,:lname,:cin,:cnss)";
+echo $pda.'/'.$nb_jour.'/'.$versement.'/'.$crax.'/'.$maintenance.'/'.$date_.'/'.$garde.'/'.$comission.'/'.$prime.'/'.$net_pay;
+
+
+
+$sql="INSERT INTO operation2(nb_jour,versment_prec,date_ver,comission,prime,pda,prime_crax,frais_maintenance,frais_garde,net_pay) 
+VALUES(:nb_jour,:versement,:date_,:comission,:prime,:pda,:crax,:maintenance,:garde,:net_pay) ";
+
 $query = $dbh->prepare($sql);
-$query->bindParam(':IdCom',$IdCom,PDO::PARAM_STR);
-$query->bindParam(':fname',$fname,PDO::PARAM_STR);
-$query->bindParam(':lname',$lname,PDO::PARAM_STR);
-$query->bindParam(':cin',$cin,PDO::PARAM_STR);
-$query->bindParam(':cnss',$cnss,PDO::PARAM_STR);
-$query->bindParam(':empid',$empid,PDO::PARAM_STR);
+
+$query->bindParam(':nb_jour',$nb_jour,PDO::PARAM_STR);
+$query->bindParam(':versement',$versement,PDO::PARAM_STR);
+$query->bindParam(':date_',$date_,PDO::PARAM_STR);
+$query->bindParam(':comission',$comission,PDO::PARAM_STR);
+$query->bindParam(':prime',$prime,PDO::PARAM_STR);
+$query->bindParam(':pda',$pda,PDO::PARAM_STR);
+$query->bindParam(':crax',$crax,PDO::PARAM_STR);
+$query->bindParam(':maintenance',$maintenance,PDO::PARAM_STR);
+$query->bindParam(':garde',$garde,PDO::PARAM_STR);
+$query->bindParam(':net_pay',$net_pay,PDO::PARAM_STR);
 $query->execute();
 $lastInsertId = $dbh->lastInsertId();
 if($lastInsertId)
@@ -45,10 +72,12 @@ else
     $error="Un problème est survenu. Veuillez réessayer";
   
 
-}
+
+
+
 
 }
-
+}
     ?>
 
 <!DOCTYPE html>
@@ -108,7 +137,7 @@ else
                             <div class="card-content">
                                 <form id="example-form" method="post" name="addemp">
                                     <div>
-                                        <h3>Arrête de la Situation Récapitulatif Provisoire</h3>
+                                        <h3>Bulletin de paie provisoire</h3>
                                         <section>
                                             <div class="wizard-content">
                                                 <div class="row">
@@ -118,7 +147,7 @@ else
                 else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
 <div class="input-field col m6 s12">
-<select  name="IdCom" autocomplete="on" size="2">
+<select  name="pda" autocomplete="on" size="2">
 <option value="" disabled selected>Select PDA</option>
 <?php $sql = "SELECT pda from secteur where pda in(select pda from vendeur where STATUS=0) ";
 $query = $dbh -> prepare($sql);
@@ -140,43 +169,51 @@ foreach($results as $result)
 
 
 <div class="input-field col m6 s12">
-<label for="empcode">Solde Antérieur </label>
-<input  name="empcode" id="empcode" type="number" step="0.01"  autocomplete="off" required>
+<label for="empcode">Nombre du jour </label>
+<input  name="nb_jour" id="empcode" type="number" step="0.01"  autocomplete="off" required>
 <span id="empid-availability" style="font-size:12px;"></span> 
 </div>
    
 
 
 <div class="input-field col m6 s12">
-<label for="firstName">Chiffre D'affaire </label>
-<input id="firstName" name="firstName" step="0.01" type="number" required>
+<label for="firstName">versement du mois precedent </label>
+<input id="firstName" name="versement" step="0.01" type="number" required>
 </div>
-
-<div class="input-field col m6 s12">
-<label for="lastName">Encaissement</label>
-<input id="lastName" name="lastName" type="number"step="0.01"  autocomplete="off" required>
-</div>
-
-<div class="input-field col m6 s12">
-<label for="CIN">Solde Client </label>
-<input id="cin" name="cin" type="number" step="0.01" required>
-</div>
-
-<div class="input-field col m6 s12">
-<label for="CNSS">Stc</label>
-<input id="cnss" name="cnss" type="number" step="0.01" autocomplete="off" required>
-</div>
-
 
 
 
 <div class="input-field col m6 s12">
-<button type="submit" name="add" onclick="return valid();" id="add" class="waves-effect waves-light btn indigo m-b-xs">Ajouter</button>
+<label for="CIN">Prime Crax  </label>
+<input id="cin" name="crax" type="number" step="0.01" required>
+</div>
+
+
+
+<div class="input-field col m6 s12">
+<p>Frais de maintenance</p>
+<input id="cnss" name="maintenance" type="number" value='0' step="0.01" autocomplete="off" required>
+</div>
+<div class="input-field col m6 s12">
+<p >Date d'operation</p>
+<input id="cnss" name="date" type="date"  autocomplete="off" required>
+</div>
+<div class="input-field col m6 s12">
+<p>Frais de Gardiennage</p>
+<input id="cnss" name="garde" type="number" value='110' step="0.01" autocomplete="off" required>
+</div>
 
 </div>
+<div class="row">
+<div class="input-field col m6 s12">
+<button type="submit" name="add"  id="add" class="waves-effect waves-light btn indigo m-b-xs">Ajouter</button>
+
+</div>
+
+
 
  <div class="input-field col m6 s12">
-<a href="manageoperation1.php"><button  name="retour" onclick="history.back();" class="waves-effect waves-light btn indigo m-b-xs">Retour</button></a>
+<a href="manageoperation1.php"><button  name="retour" class="waves-effect waves-light btn indigo m-b-xs">Retour</button></a>
 
 </div>                                                       
 

@@ -84,22 +84,20 @@ position: left;
                     <div class="col s12 m12 l12">
                         <div class="card">
                             <div class="card-content">
-                             <marquee>   <span class="card-title">Arrête de la Situation Récapitulatif Provisoire</span></marquee>
+                             <marquee>   <span class="card-title">Bulletin de paie - provisoire</span></marquee>
                                 <?php if($msg){?><div class="succWrap"><strong>SUCCESS</strong> : <?php echo htmlentities($msg); ?> </div><?php }?>
-                                <a href="addoperation1.php"><button type="button" class="btn btn-info" id="buttA" >+ Ajouter</button></a> 
+                                <a href="addoperation2.php"><button type="button" class="btn btn-info" id="buttA" >+ Ajouter</button></a> 
                                 <table id="example" class="display responsive-table " border="2" >
                                     <thead>
                                         <tr>
                                             <th>Numéro</th>
-                                            <th>Code Assabil</th>
-                                            <th>Région</th>
-                                            <th>Secteur</th>
-                                            <th>Solde Antérieur</th>
-                                            <th>Chiffre d'Affaire</th>
-                                            <th>Encaissement</th>
-                                            <th>Solde Client</th>
-                                             <th >Ecart</th>
-                                            <th>Stc</th>
+                                            <th>Vendeur</th>
+                                            <th>Nombre du Jour</th>
+                                            <th>Versement du mois precedent</th>
+                                            <th>Date</th>
+                                            <th>Comission</th>
+                                            <th>Salaire Net</th>
+                                            
                                             
                                              <th>Action</th>
                                         </tr>
@@ -131,10 +129,9 @@ echo $state;
                                             
                                             <td><?php echo htmlentities($result->nom_secteur);?></td>
                                             <td><?php echo htmlentities($result->solde_ant);?></td>
-                                            <td><?php echo htmlentities($result->chiffre);?></td>
-                                            <td><?php echo htmlentities($result->encaissement);?></td>
-                                            <td><?php echo htmlentities($result->solde_clie);?></td>
-                                            <td><?php echo htmlentities($ecart);?></td>
+                                            
+                                            
+                                            
                                            
                                             <td><?php echo htmlentities($result->stc);?></td>
                                             <td><a href="printoperation1.php?del=<?php echo htmlentities($result->id);?>"><i class="material-icons">print</i></a><a href="editoperation1.php?deptid=<?php echo htmlentities($result->id);?>"><i class="material-icons">mode_edit</i></a><a href="manageoperation1.php?del=<?php echo htmlentities($result->id);?>" > <i class="material-icons">delete_forever</i></a></td>

@@ -35,15 +35,14 @@ $query->bindParam(':empid',$empid,PDO::PARAM_STR);
 $query->execute();
 $lastInsertId = $dbh->lastInsertId();
 if($lastInsertId)
-{
-    $error="Un problème est survenu. Veuillez réessayer";
+{  $error="Un problème est survenu. Veuillez réessayer";
     echo "$IdCom+$fname+$lname+$cin+$cnss+$empid+$dob_1+$dob_2";
-   
+
 
 }
 else 
 {
-   
+
     $msg="L'insertion est bien fait";
     header('location:manageemployee.php');
 
@@ -56,10 +55,10 @@ else
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        
+
         <!-- Title -->
         <title>DRH | ajouter des employés</title>
-        
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <meta charset="UTF-8">
         <meta name="description" content="Responsive Admin Dashboard Template" />
@@ -103,21 +102,7 @@ return true;
 }
 </script>
 
-<script>
-function checkAvailabilityEmpid() {
-$("#loaderIcon").show();
-jQuery.ajax({
-url: "check_availability.php",
-data:'empcode='+$("#empcode").val(),
-type: "POST",
-success:function(data){
-$("#empid-availability").html(data);
-$("#loaderIcon").hide();
-},
-error:function (){}
-});
-}
-</script>
+
 
 <script>
 function checkAvailabilityEmailid() {
@@ -140,7 +125,7 @@ error:function (){}
     </head>
     <body>
   <?php include('includes/header.php');?>
-            
+
        <?php include('includes/sidebar.php');?>
    <main class="mn-inner">
                 <div class="row">
@@ -164,7 +149,7 @@ error:function (){}
 <div class="input-field col m6 s12">
 <select  name="IdCom" autocomplete="on" size="2">
 <option value="" disabled selected>Select PDA</option>
-<?php $sql = "SELECT pda from secteur where pda not in(select pda from vendeur where STATUS=0) ";
+<?php $sql = "SELECT pda from secteur where pda not in(select pda from vendeur ) ";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -188,11 +173,11 @@ foreach($results as $result)
 <input  name="empcode" id="empcode" onBlur="checkAvailabilityEmpid()" type="text" autocomplete="off" required>
 <span id="empid-availability" style="font-size:12px;"></span> 
 </div>
-   
+
 
 
 <div class="input-field col m6 s12">
-<label for="firstName">Prenom </label>
+<label for="firstName">Prénom </label>
 <input id="firstName" name="firstName" type="text" required>
 </div>
 
@@ -222,7 +207,7 @@ foreach($results as $result)
 <input type="date" id="birthdate" name="dob_2" type="date"  autocomplete="off" >
 </div>
 
-                                                    
+
 
 
 
@@ -245,12 +230,12 @@ foreach($results as $result)
 </div>                                                       
 
 
-                                                       
+
                                                 </div>
                                             </div>
                                         </section>
-                                     
-                                    
+
+
                                         </section>
                                     </div>
                                 </form>
@@ -261,7 +246,7 @@ foreach($results as $result)
             </main>
         </div>
         <div class="left-sidebar-hover"></div>
-        
+
         <!-- Javascripts -->
         <script src="../assets/plugins/jquery/jquery-2.2.0.min.js"></script>
         <script src="../assets/plugins/materialize/js/materialize.min.js"></script>
@@ -269,7 +254,7 @@ foreach($results as $result)
         <script src="../assets/plugins/jquery-blockui/jquery.blockui.js"></script>
         <script src="../assets/js/alpha.min.js"></script>
         <script src="../assets/js/pages/form_elements.js"></script>
-        
+
     </body>
 </html>
-<?php } ?> 
+<?php } ?>  

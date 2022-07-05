@@ -7,7 +7,7 @@ if(strlen($_SESSION['alogin'])==0)
 header('location:index.php');
 }
 else{  
-    // echo"<script>window.print()</script>";
+    echo"<script>window.print()</script>";
     ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,13 +38,13 @@ th,td{
     <?php
 $did=$_GET['del'];
 
-$sql = "SELECT v.id,v.pda,v.solde_ant,v.chiffre,v.encaissement,v.solde_clie,v.stc,a.nom,r.nom_secteur from operation1 v join vendeur s on v.pda=s.pda join secteur r on s.pda=r.pda join region a on r.id_region=a.id where v.id=:did";
+$sql = "SELECT v.id,v.pda,v.solde_ant,v.chiffre,v.encaissement,v.solde_clie,v.stc,v.date_opera,a.nom,r.nom_secteur,s.nomp,s.prenom,v.realise_le,s.code_sage from operation1 v join vendeur s on v.pda=s.pda join secteur r on s.pda=r.pda join region a on r.id_region=a.id where v.id=:did";
 $query = $dbh -> prepare($sql);
 $query->bindParam(':did',$did,PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
-
+$today = date('d/m/Y');
 if($query->rowCount() > 0)
 {
 foreach($results as $result)
@@ -64,8 +64,12 @@ echo $state;
 
                    <div class="col-12  py-2 px-5">
      
-                        <h5>Agence :<?php echo htmlentities($result->nom);?> <h5> <center>
+                        <b>Agence : </b> <?php echo htmlentities($result->nom);?><center>
                   </div>
+                  <div class="col-12  py-0 px-5">
+     
+     <b>Secteur : </b> <?php echo htmlentities($result->nom_secteur);?><center>
+</div>
 
 <div>
  
@@ -73,21 +77,21 @@ echo $state;
 <div class="container pt-5 ">
   <div class="row">
     <div class="col-4 px-0">
-      <b>Periode du   :</b>
+      <b>Période du   :</b><?php echo htmlentities($result->date_opera);?>
     </div>
     <div class="col-4">
      <b> Code Assabil :<?php echo htmlentities($result->pda);?></b>
     </div>
     <div class="col-4 ">
-    <b> xxxxxxxxxxxxxxxxxxxxxxxx :</b>
+    <b> <?php echo htmlentities($result->nomp).' '.htmlentities($result->prenom);?></b>
     </div>
   </div>
   <div class="row"  >
     <div class="col-4 mx-0 px-0">
-    <b>Realise le :</b>
+    <b>Réalisé le :</b><?php echo $today;?>
     </div>
     <div class="col-8">
-    <b> Code Sage :</b>
+    <b> Code Sage :</b><?php echo htmlentities($result->code_sage);?>
 </div>
         
 

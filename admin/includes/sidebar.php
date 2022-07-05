@@ -93,13 +93,24 @@ foreach($results as $result)
                         <div class="collapsible-body">
                             <ul>
                                 <li><a href="manageoperation1.php"> Arrête de la Situation</a></li>
-                                <li><a href="manageemployee _h.php">Historique des Opérations</a></li>
+                                <li><a href="histoperation1.php">Historique des Opérations</a></li>
                                
        
                             </ul>
                         </div>
                     </li>
 
+                    <li class="no-padding">
+                        <a class="collapsible-header waves-effect waves-grey"><i class="material-icons">trending_up</i>Bulletin<i class="nav-drop-icon material-icons">keyboard_arrow_right</i></a>
+                        <div class="collapsible-body">
+                            <ul>
+                                <li><a href="manageoperation2.php"> Bulletin de paie</a></li>
+                                <li><a href="histoperation1.php">Historique des Opérations</a></li>
+                               
+       
+                            </ul>
+                        </div>
+                    </li>
 
 
                         <li class="no-padding">
