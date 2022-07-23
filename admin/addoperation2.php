@@ -37,7 +37,7 @@ if($versement>=100000 ){
 $net_pay=((2638*$nb_jour)/26)+$comission+$maintenance+$prime+110;
 
 
-echo $pda.'/'.$nb_jour.'/'.$versement.'/'.$crax.'/'.$maintenance.'/'.$date_.'/'.$garde.'/'.$comission.'/'.$prime.'/'.$net_pay;
+
 
 
 
@@ -61,7 +61,7 @@ $lastInsertId = $dbh->lastInsertId();
 if($lastInsertId)
 {
     $msg="L'insertion est bien fait";
-    header('location:manageoperation1.php');
+    header('location:manageoperation2.php');
  
     
    
@@ -213,7 +213,7 @@ foreach($results as $result)
 
 
  <div class="input-field col m6 s12">
-<a href="manageoperation1.php"><button  name="retour" class="waves-effect waves-light btn indigo m-b-xs">Retour</button></a>
+<a href="manageoperation2.php"><button  name="retour" class="waves-effect waves-light btn indigo m-b-xs">Retour</button></a>
 
 </div>                                                       
 

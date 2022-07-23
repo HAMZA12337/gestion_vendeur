@@ -10,39 +10,61 @@ header('location:index.php');
 else{
     if(isset($_POST['retour']))
 { 
-    header('location:manageoperation1.php');
+    header('location:manageoperation2.php');
 
 }
 if(isset($_POST['add']))
 { 
-    // pda
     $did=$_GET['deptid'];  
-$IdCom=strval($_POST['IdCom']); 
+    $pda=$_POST['pda']; 
 // code sage
-$empid=$_POST['empcode'];
-$fname=$_POST['firstName'];
-$lname=$_POST['lastName'];   
-$cin=$_POST['cin']; 
-$cnss=$_POST['cnss']; 
- 
-$ecart=$empid+$fname-$lname;
+$nb_jour=$_POST['nb_jour'];
+$versement=$_POST['versement'];
+$crax=$_POST['crax']; 
+$maintenance=$_POST['maintenance']; 
+$date_=$_POST['date'];
+$garde=$_POST['garde'];
+$comission=0;
+$prime=0;
+$net_pay=0; 
+if($versement>=49000 && $versement<69000 ){
+    $comission=0.01*$versement;
+}
+if($versement>=69000 && $versement<80000 ){
+    $comission=0.02*$versement;
+}
+if($versement>=80000 && $versement<100000 ){
+    $prime=0.02*$versement+1000;
+}
+if($versement>=100000 ){
+    $prime=0.02*$versement+2000;
+}
 
-$sql=" update operation1 set pda=:IdCom, solde_ant=:empid, chiffre=:fname,encaissement=:lname,solde_clie=:cin,ecart=:ecart, stc=:cnss where  id=:did ";
+$net_pay=((2638*$nb_jour)/26)+$comission+$maintenance+$prime+110;
+
+
+echo $pda.'/'.$nb_jour.'/'.$versement.'/'.$crax.'/'.$maintenance.'/'.$date_.'/'.$garde.'/'.$comission.'/'.$prime.'/'.$net_pay;
+
+
+$sql=" update operation2 set nb_jour=:nb_jour,versment_prec=:versement, date_ver=:date_,comission=:comission,prime=:prime,pda=:pda, prime_crax=:crax,frais_maintenance=:maintenance,frais_garde=:garde,net_pay=:net_pay  where  id=:did ";
 
 
 
 $query = $dbh->prepare($sql);
-$query->bindParam(':IdCom',$IdCom,PDO::PARAM_STR);
-$query->bindParam(':fname',$fname,PDO::PARAM_STR);
-$query->bindParam(':lname',$lname,PDO::PARAM_STR);
-$query->bindParam(':cin',$cin,PDO::PARAM_STR);
-$query->bindParam(':cnss',$cnss,PDO::PARAM_STR);
-$query->bindParam(':empid',$empid,PDO::PARAM_STR);
-$query->bindParam(':ecart',$ecart,PDO::PARAM_STR);
+$query->bindParam(':nb_jour',$nb_jour,PDO::PARAM_STR);
+$query->bindParam(':versement',$versement,PDO::PARAM_STR);
+$query->bindParam(':date_',$date_,PDO::PARAM_STR);
+$query->bindParam(':comission',$comission,PDO::PARAM_STR);
+$query->bindParam(':prime',$prime,PDO::PARAM_STR);
+$query->bindParam(':pda',$pda,PDO::PARAM_STR);
+$query->bindParam(':crax',$crax,PDO::PARAM_STR);
+$query->bindParam(':maintenance',$maintenance,PDO::PARAM_STR);
+$query->bindParam(':garde',$garde,PDO::PARAM_STR);
+$query->bindParam(':net_pay',$net_pay,PDO::PARAM_STR);
 $query->bindParam(':did',$did,PDO::PARAM_STR);
 $query->execute();
 
- header('location:manageoperation1.php');
+ header('location:manageoperation2.php');
 
 // // }
 
@@ -50,12 +72,13 @@ $query->execute();
 
     ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
         
         <!-- Title -->
-        <title>DRH | ajouter des vendeurs</title>
+        <title>DRH | ajouter des employés</title>
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <meta charset="UTF-8">
@@ -87,7 +110,7 @@ $query->execute();
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
 }
         </style>
-
+   
 
 
 
@@ -99,13 +122,15 @@ $query->execute();
        <?php include('includes/sidebar.php');?>
    <main class="mn-inner">
                 <div class="row">
-                  
+                    <div class="col s12">
+                        <div class="page-title">Arrête de la Situation</div>
+                    </div>
                     <div class="col s12 m12 l12">
                         <div class="card">
                             <div class="card-content">
                                 <form id="example-form" method="post" name="addemp">
                                     <div>
-                                       
+                                        <h3>Bulletin de paie provisoire</h3>
                                         <section>
                                             <div class="wizard-content">
                                                 <div class="row">
@@ -115,12 +140,10 @@ $query->execute();
                 else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
 <div class="input-field col m6 s12">
-<p style="color:#008B8B;">PDA</p>
-<select  name="IdCom" autocomplete="on" size="2" required>
+<select  name="pda" autocomplete="on" size="2">
 <option value="" disabled selected>Select PDA</option>
-<?php $sql = "SELECT pda from secteur  ";
+<?php $sql = "SELECT pda from secteur ";
 $query = $dbh -> prepare($sql);
-$query->bindParam(':did',$did,PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
@@ -136,7 +159,7 @@ foreach($results as $result)
 
 <?php 
 $did=$_GET['deptid'];
-$sql = "SELECT * from operation1 WHERE id=:did";
+$sql = "SELECT * from operation2 WHERE id=:did";
 $query = $dbh -> prepare($sql);
 $query->bindParam(':did',$did,PDO::PARAM_STR);
 $query->execute();
@@ -149,57 +172,56 @@ foreach($results as $result)
 
 
 
-<div class="input-field col m6 s12">
 
-<p style="color:#008B8B;">Solde Antérieur</p>
-<input  name="empcode" id="empcode"  value="<?php echo htmlentities($result->solde_ant);?>" type="number" autocomplete="off" required>
+
+<div class="input-field col m6 s12">
+<p style="color:#008B8B;">Nombre du jour </p>
+<input  name="nb_jour" id="empcode" type="number" step="0.01"   value="<?php echo htmlentities($result->nb_jour);?>"  autocomplete="off" required>
 <span id="empid-availability" style="font-size:12px;"></span> 
 </div>
    
 
 
 <div class="input-field col m6 s12">
-<p style="color:#008B8B;">Chiffre D'affaire</p>
-<input id="firstName" name="firstName" value="<?php echo htmlentities($result->chiffre);?>"  type="text" required>
+<p style="color:#008B8B;">versement du mois precedent </p>
+<input id="firstName" name="versement" value="<?php echo htmlentities($result->versment_prec);?>"  step="0.01" type="number" required>
 </div>
+
+
 
 <div class="input-field col m6 s12">
-<p style="color:#008B8B;">Encaissement</p>
-<input id="lastName" name="lastName" type="number"  value="<?php echo htmlentities($result->encaissement);?>" autocomplete="off" required>
+<p style="color:#008B8B;">Prime Crax  </p>
+<input id="cin" name="crax" type="number" value="<?php echo htmlentities($result->prime_crax);?>"  step="0.01" required>
 </div>
+
+
 
 <div class="input-field col m6 s12">
-<p style="color:#008B8B;">Solde Client </p>
-<input id="cin" name="cin" type="number" value="<?php echo htmlentities($result->solde_clie);?>" required>
+<p style="color:#008B8B;">Frais de maintenance</p>
+<input id="cnss" name="maintenance" type="number" value="<?php echo htmlentities($result->frais_maintenance);?>"  value='0' step="0.01" autocomplete="off" required>
 </div>
-
 <div class="input-field col m6 s12">
-<p style="color:#008B8B;">Stc</p>
-<input id="cnss" name="cnss" type="number" value="<?php echo htmlentities($result->stc);?>"  autocomplete="off" required>
+<p style="color:#008B8B;">Date d'operation</p>
+<input id="cnss" name="date" type="date"  value="<?php echo htmlentities($result->date_ver);?>"  autocomplete="off" required>
+</div>
+<div class="input-field col m6 s12">
+<p style="color:#008B8B;">Frais de Gardiennage</p>
+<input id="cnss" name="garde" type="number" value="<?php echo htmlentities($result->frais_garde);?>" value='110' step="0.01" autocomplete="off" required>
 </div>
 
-
-
-                                                    
+</div>
 <?php }} ?>
 
-
-
-
-
-
-
-
-
-
-
+<div class="row">
 <div class="input-field col m6 s12">
 <button type="submit" name="add"  id="add" class="waves-effect waves-light btn indigo m-b-xs">Update</button>
 
 </div>
 
+
+
  <div class="input-field col m6 s12">
-<a href="manageemployee.php"><button  name="retour" onclick="history.back();" class="waves-effect waves-light btn indigo m-b-xs">Retour</button></a>
+<a href="manageoperation2.php"><button  name="retour" class="waves-effect waves-light btn indigo m-b-xs">Retour</button></a>
 
 </div>                                                       
 

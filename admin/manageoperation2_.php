@@ -106,9 +106,9 @@ margin-left:760px;
                     <div class="col s12 m12 l12">
                         <div class="card">
                             <div class="card-content">
-                             <marquee>   <span class="card-title">Bulletin de paie - provisoire - <?php echo date("Y");?></span></marquee>
+                             <marquee>   <span class="card-title">Historique-Bulletin de paie - provisoire </span></marquee>
                                 <?php if($msg){?><div class="succWrap"><strong>SUCCESS</strong> : <?php echo htmlentities($msg); ?> </div><?php }?>
-                                <a href="addoperation2.php"><button type="button" class="btn btn-info" id="buttA" >+ Ajouter</button></a> 
+                               
                                 <div class="col-md-3">  
                      <form  method="post">
 
@@ -147,7 +147,7 @@ if(isset($_POST['add']))
     $query->bindParam(':date',$date,PDO::PARAM_STR);
 }else{
     $date=date("Y");
-    $sql = "SELECT * from operation2 v join vendeur s on v.pda=s.pda where year(v.date_ver)=:date";
+    $sql = "SELECT * from operation2 v join vendeur s on v.pda=s.pda where year(v.date_ver)<:date";
     $query = $dbh -> prepare($sql);
     $query->bindParam(':date',$date,PDO::PARAM_STR);
 }
@@ -178,7 +178,7 @@ echo $state;
                                            
                                             <td><?php echo htmlentities($result->comission);?></td>
                                             <td><?php echo htmlentities($result->net_pay);?></td>
-                                            <td><a href="editoperation2.php?deptid=<?php echo htmlentities($result->id);?>"><i class="material-icons">mode_edit</i></a><a href="manageoperation2.php?del=<?php echo htmlentities($result->id);?>" > <i class="material-icons">delete_forever</i></a></td>
+                                            <td><a href="manageoperation2.php?del=<?php echo htmlentities($result->id);?>" > <i class="material-icons">delete_forever</i></a></td>
                                         </tr>
                                          <?php $cnt++;} }?>
                                     </tbody>
@@ -200,7 +200,7 @@ echo $state;
         <script src="../assets/plugins/datatables/js/jquery.dataTables.min.js"></script>
         <script src="../assets/js/alpha.min.js"></script>
         <script src="../assets/js/pages/table-data.js"></script>
-       
+        
     </body>
 </html>
 <?php } ?>

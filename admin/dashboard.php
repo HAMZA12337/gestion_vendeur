@@ -30,26 +30,69 @@ else{
 
         	
         <!-- Theme Styles -->
-        <link href="../assets/css/alpha.min.css" rel="stylesheet" type="text/css"/>
-        <link href="../assets/css/custom.css" rel="stylesheet" type="text/css"/>
+         <script type="text/javascript" src="./charts/js/jquery.min.js"></script>
+        <link href="../assets/css/custom.css" rel="stylesheet" type="text/css"/> 
+       <link href="../assets/css/alpha.min.css" rel="stylesheet" type="text/css"/>
         
+        
+        <script type="text/javascript" src="./charts/js/Chart.min.js"></script> 
+         
+        <style>
+
+#chart {
+                    width:70%;
+                    padding-left: 12%;
+                    margin-left:100px;
+                    margin-top:0px !important;
+                    padding-top:0px !important;
+                    padding-left:0px !important;
+                }
+                
+                #chart-container {
+                    width: 100%;
+                    height: auto;
+                }
+
+
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
     </head>
+
+
+
+
+    
+
+
+
+
     <body>
            <?php include('includes/header.php');?>
-            
+         
        <?php include('includes/sidebar.php');?>
-
-            <main class="mn-inner">
+     
+            <main class="mn-inner py-0">
                 <div class="middle-content">
                     <div class="row no-m-t no-m-b">
                     <div class="col s12 m12 l4">
                         <div class="card stats-card">
                             <div class="card-content">
                             
-                                <span class="card-title">Nombre d'Agence </span>
+                                <span class="card-title">Nombre d'Agences </span>
                                 <span class="stats-counter">
 <?php
-$sql = "SELECT id from tblemployees";
+$sql = "SELECT id from region";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -65,9 +108,9 @@ $empcount=$query->rowCount();
                         <div class="card stats-card">
                             <div class="card-content">
                             
-                                <span class="card-title">Nombre Vendeur  </span>
+                                <span class="card-title">Nombre de Vendeurs Actifs </span>
     <?php
-$sql = "SELECT id from tbldepartments";
+$sql = "SELECT * from vendeur where STATUS=0";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -81,16 +124,26 @@ $dptcount=$query->rowCount();
                     <div class="col s12 m12 l4">
                         <div class="card stats-card">
                             <div class="card-content">
-                                <span class="card-title">Nombre type de congé</span>
+                                <span class="card-title">Le meilleur vendeur</span>
                                     <?php
-$sql = "SELECT id from  tblleavetype";
+                                    $yea=date('Y');
+                                    $mon=date('m')-1;
+                                    ECHO $yea ." / ".$mon;
+$sql = "SELECT s.nomp,s.prenom from operation2 v join vendeur s on v.pda=s.pda where year(v.date_ver)=:yea and month(v.date_ver)=:mon
+and v.net_pay=(select max(net_pay) from operation2 where year(date_ver)=:yea  and month(date_ver)=:mon )";
 $query = $dbh -> prepare($sql);
+$query->bindParam(':yea',$yea,PDO::PARAM_STR);
+$query->bindParam(':mon',$mon,PDO::PARAM_STR);
+
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $leavtypcount=$query->rowCount();
+foreach($results as $result)
+{ 
 ?>   
-                                <span class="stats-counter"><span class="counter"><?php echo htmlentities($leavtypcount);?></span></span>
-                      
+    <!-- <?php echo htmlentities($result->nomp);?> -->
+                              <p style='color:#40A6AA; font-family: "Lucida Console", "Courier New", monospace;'><?php echo htmlentities($result->nomp).' '.htmlentities($result->prenom);?></p>
+                                <?php }?> 
                             </div>
                             <div class="progress stats-card-progress">
                                 <div class="determinate" style="width: 70%"></div>
@@ -99,74 +152,89 @@ $leavtypcount=$query->rowCount();
                     </div>
                 </div>
                  
-                    <div class="row no-m-t no-m-b">
-                        <div class="col s12 m12 l12">
-                            <div class="card invoices-card">
-                                <div class="card-content">
-                                 
-                                    <span class="card-title">DERNIÈRES DEMANDES DE CONGÉ</span>
-                             <table id="example" class="display responsive-table ">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th width="200">Nom d'employé</th>
-                                            <th width="120">Type de congé</th>
-
-                                             <th width="180">Date de demande</th>                 
-                                            <th>Status</th>
-                                            <th align="center">Action</th>
-                                        </tr>
-                                    </thead>
-                                 
-                                    <tbody>
-<?php $sql = "SELECT tblleaves.id as lid,tblemployees.FirstName,tblemployees.LastName,tblemployees.EmpId,tblemployees.id,tblleaves.LeaveType,tblleaves.PostingDate,tblleaves.Status from tblleaves join tblemployees on tblleaves.empid=tblemployees.id order by lid desc limit 6";
-$query = $dbh -> prepare($sql);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-$cnt=1;
-if($query->rowCount() > 0)
-{
-foreach($results as $result)
-{         
-      ?>  
-
-                                        <tr>
-                                            <td> <b><?php echo htmlentities($cnt);?></b></td>
-                                              <td><a href="editemployee.php?empid=<?php echo htmlentities($result->id);?>" target="_blank"><?php echo htmlentities($result->FirstName." ".$result->LastName);?>(<?php echo htmlentities($result->EmpId);?>)</a></td>
-                                            <td><?php echo htmlentities($result->LeaveType);?></td>
-                                            <td><?php echo htmlentities($result->PostingDate);?></td>
-                                                                       <td><?php $stats=$result->Status;
-if($stats==1){
-                                             ?>
-                                                 <span style="color: green">Accordé</span>
-                                                 <?php } if($stats==2)  { ?>
-                                                <span style="color: red">Refusé</span>
-                                                 <?php } if($stats==0)  { ?>
- <span style="color: blue">Nouveau Demande</span>
- <?php } ?>
-
-
-                                             </td>
-
-          <td>
-           <td><a href="leave-details.php?leaveid=<?php echo htmlentities($result->lid);?>" class="waves-effect waves-light btn blue m-b-xs"  > View Details</a></td>
-                                    </tr>
-                                         <?php $cnt++;} }?>
-                                    </tbody>
-                                </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                     </div>
+                     <aside id="chart">
+        <center>
+        <!-- ____________________________________________________________________________________________
+        <!-- <h1>STATISTIQUES DES VENDEURS</h1> -->
+        <!-- _____________________________________________________________________________________________  -->
+        </center>
+        <div id="chart-container">
+            <canvas id="graphCanvas"></canvas>
+        </div>
+        <center>
+            </aside>
+       
               
             </main>
-          
-        </div>
 
+            
+            
         
-        
+            <script>
+        $(document).ready(function () {
+            barChart();
+            
+        });
+        function barChart() {
+            {
+                $.post("./charts/datas.php",
+                function (data)
+                {
+                    console.log(data);
+                     var name = [];
+                    var marks = [0.1,0.9,0.4,0.43,0.23,0.54,1];
+                    for (var i in data) {
+                        name.push(data[i].nomp);
+                        marks.push(data[i]);
+                    }
+                    var chartdata = {
+                        labels: name,
+                        datasets: [
+                            {
+                                label: 'STATISTIQUES DES VENDEURS',
+                                backgroundColor: '#49e2ff',
+                                borderColor: '#46d5f1',
+                                hoverBackgroundColor: '#CCCCCC',
+                                hoverBorderColor: '#666666',
+                                data: marks,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(255,99,132,1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
+                                ],
+                                borderWidth: 1
+                            }
+                        ]
+                    };
+                    var graphTarget = $("#graphCanvas");
+                    var barGraph = new Chart(graphTarget, {
+                        type: 'bar',
+                        data: chartdata,    
+            borderWidth: 1
+                    });
+                });
+            }
+        }
+       
+    </script>
+    
+
+    
         <!-- Javascripts -->
+        
+
         <script src="../assets/plugins/jquery/jquery-2.2.0.min.js"></script>
         <script src="../assets/plugins/materialize/js/materialize.min.js"></script>
         <script src="../assets/plugins/material-preloader/js/materialPreloader.min.js"></script>
@@ -184,7 +252,27 @@ if($stats==1){
         <script src="../assets/plugins/peity/jquery.peity.min.js"></script>
         <script src="../assets/js/alpha.min.js"></script>
         <script src="../assets/js/pages/dashboard.js"></script>
+       
+
+        <!-- <script type="text/javascript" src="./charts/js/jquery.min.js"></script> -->
+        <script type="text/javascript" src="./charts/js/Chart.min.js"></script> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
+         
     </body>
 </html>
 <?php } ?>

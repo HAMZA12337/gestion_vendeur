@@ -105,7 +105,7 @@ foreach($results as $result)
                         <div class="collapsible-body">
                             <ul>
                                 <li><a href="manageoperation2.php"> Bulletin de paie</a></li>
-                                <li><a href="histoperation1.php">Historique des Opérations</a></li>
+                                <li><a href="manageoperation2_.php">Historique des Opérations</a></li>
                                
        
                             </ul>
