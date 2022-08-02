@@ -87,6 +87,7 @@ position: left;
                                 <span class="card-title">Information des Vendeurs</span>
                                 <?php if($msg){?><div class="succWrap"><strong>SUCCESS</strong> : <?php echo htmlentities($msg); ?> </div><?php }?>
                                 <a href="addemployee.php"><button type="button" class="btn btn-info" id="buttA" >+ Ajouter</button></a> 
+                                <a href="export_vendeur.php"><button type="button" class="btn btn-info" id="buttA" > <i class="material-icons">backup</i> exporter<i class="material-icons">backup</i></button></a> 
                                 <table id="example" class="display responsive-table " border="2" >
                                     <thead>
                                         <tr>

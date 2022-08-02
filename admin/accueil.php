@@ -30,7 +30,7 @@ header('location:../index.php');
         <link href="../assets/css/custom.css" rel="stylesheet" type="text/css"/>
   <style>
        .ha{
-        background: url('../assets/images/div.png') no-repeat center center fixed; 
+        background: url('../assets/images/HR.jpg') no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

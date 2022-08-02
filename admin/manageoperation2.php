@@ -109,6 +109,7 @@ margin-left:760px;
                              <marquee>   <span class="card-title">Bulletin de paie - provisoire - <?php echo date("Y");?></span></marquee>
                                 <?php if($msg){?><div class="succWrap"><strong>SUCCESS</strong> : <?php echo htmlentities($msg); ?> </div><?php }?>
                                 <a href="addoperation2.php"><button type="button" class="btn btn-info" id="buttA" >+ Ajouter</button></a> 
+                                <a href="export_bulletin.php"><button type="button" class="btn btn-info" id="buttA" > <i class="material-icons">backup</i> exporter<i class="material-icons">backup</i></button></a> 
                                 <div class="col-md-3">  
                      <form  method="post">
 

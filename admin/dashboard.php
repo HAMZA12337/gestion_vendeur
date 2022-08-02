@@ -182,37 +182,160 @@ foreach($results as $result)
                 function (data)
                 {
                     console.log(data);
-                     var name = [];
-                    var marks = [0.1,0.9,0.4,0.43,0.23,0.54,1];
-                    for (var i in data) {
-                        name.push(data[i].nomp);
-                        marks.push(data[i]);
+                     var name = ["janvier","fevrier","mars","avril","mai","juin","juillet","aout","septembre","octobre","novembre","decembre"];
+                    var marks = [];
+                    var j=0;
+                    for (var i=0;i<11;i++){
+                           
+                       if(j<data.length){
+                        console.log(data[j].mois);
+                        if((data[j].mois-1)==i){
+                            name.push();
+                            marks.push(data[j].counter);
+                            j++;
+                        }else{
+                        name.push();
+                        marks.push(0);
+                        }}else{
+                        name.push();
+                        marks.push(0);
+                        }
+                        
+                    
                     }
+                    //second function 
+                    $.post("./charts/sortdb.php",
+                function (data)
+                {
+                    console.log(data);
+                    var name_1 = ["janvier","fevrier","mars","avril","mai","juin","juillet","aout","septembre","octobre","novembre","decembre"];
+                    var marks_2 = [];
+                    var j=0;
+                    for (var i=0;i<11;i++){
+                           
+                       if(j<data.length){
+                        console.log(data[j].mois);
+                        if((data[j].mois-1)==i){
+                            name_1.push();
+                            marks_2.push(data[j].counter);
+                            j++;
+                        }else{
+                        name_1.push();
+                        marks_2.push(0);
+                        }}else{
+                        name_1.push();
+                        marks_2.push(0);
+                        }
+                        
+                    
+                    }
+
+
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    //===============
                     var chartdata = {
                         labels: name,
                         datasets: [
                             {
-                                label: 'STATISTIQUES DES VENDEURS',
-                                backgroundColor: '#49e2ff',
-                                borderColor: '#46d5f1',
-                                hoverBackgroundColor: '#CCCCCC',
+                                label: 'Statistiques des vendeurs sortants',
+                                backgroundColor: '#e2c3b8',
+                                borderColor: '#e2c3b8',
+                                hoverBackgroundColor: '#80c080',
                                 hoverBorderColor: '#666666',
                                 data: marks,
                                 backgroundColor: [
                                     'rgba(255, 99, 132, 0.2)',
-                                    'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
-                                    'rgba(75, 192, 192, 0.2)',
-                                    'rgba(153, 102, 255, 0.2)',
-                                    'rgba(255, 159, 64, 0.2)'
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)'
+                                    
                                 ],
                                 borderColor: [
                                     'rgba(255,99,132,1)',
+                                    'rgba(255,99,132,1)',
+                                    'rgba(255,99,132,1)',
+                                    'rgba(255,99,132,1)',
+                                    'rgba(255,99,132,1)',
+                                    'rgba(255,99,132,1)',
+                                    'rgba(255,99,132,1)',
+                                    'rgba(255,99,132,1)',
+                                    'rgba(255,99,132,1)',
+                                    'rgba(255,99,132,1)',
+                                    'rgba(255,99,132,1)',
+                                    'rgba(255,99,132,1)'
+
+                                    
+                                ],
+                                borderWidth: 1
+                            }
+                            ,
+                            {
+                                label: 'Statistiques des vendeurs entrants',
+                                backgroundColor: '#49e2ff',
+                                borderColor: '#46d5f1',
+                                hoverBackgroundColor: '#CCCCCC',
+                                hoverBorderColor: '#666666',
+                                data: marks_2,
+                                backgroundColor: [
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)'
+
+                                    
+                                ],
+                                borderColor: [
                                     'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                    'rgba(75, 192, 192, 1)',
-                                    'rgba(153, 102, 255, 1)',
-                                    'rgba(255, 159, 64, 1)'
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(54, 162, 235, 1)'
+
+                                    
                                 ],
                                 borderWidth: 1
                             }
@@ -224,6 +347,7 @@ foreach($results as $result)
                         data: chartdata,    
             borderWidth: 1
                     });
+                });
                 });
             }
         }

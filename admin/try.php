@@ -1,16 +1,6 @@
 
         <!-- <style type="text/css">
-            #chart {
-                    width:60%;
-                    padding-left: 12%;
-                    margin-left:300px;
-                    margin-top:200px;
-                }
-                
-                #chart-container {
-                    width: 100%;
-                    height: auto;
-                }
+            
         </style> -->
         <script type="text/javascript" src="./charts/js/jquery.min.js"></script>
         <script type="text/javascript" src="./charts/js/Chart.min.js"></script>
